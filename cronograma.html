@@ -1,213 +1,210 @@
   <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cronograma de Citas</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <!-- html2pdf.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
-    <!-- Estilos adicionales -->
-    <style>
-        body { margin:0; padding:0; display:flex; }
-        .sidebar { width:250px; background:#121f16; height:100vh; position:fixed; transition: width .3s ease, opacity .3s ease; opacity:1; }
-        .sidebar:not(.open) { opacity:.8; }
-        .sidebar a { color:#fff; padding:15px; display:block; text-decoration:none; transition: transform .2s, box-shadow .2s; }
-        .sidebar a:hover { transform:translateY(-2px); box-shadow:0 4px 8px rgba(0,0,0,0.1); background:#817373; }
-        .sidebar .navbar-brand { font-size:24px; font-weight:bold; padding-left:20px; }
-        .content { margin-left:250px; padding:20px; transition: margin-left .3s ease; }
-        .navbar-toggler { display:none; }
-        @keyframes fadeIn { from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
-        .fade-in { animation:fadeIn .5s ease forwards; }
-        @keyframes pulse { 0%,100%{ box-shadow:0 0 0 0 rgba(220,53,69,0.7);} 50%{ box-shadow:0 0 10px 5px rgba(220,53,69,0.3);} }
-        .highlight { position:relative; animation:pulse 2s infinite ease-in-out; }
-        @keyframes underlineGrow { 0% { width:0; } 100% { width:100%; } }
-        .highlight::after { content:''; position:absolute; left:0; bottom:2px; height:3px; background:red; animation:underlineGrow 1s ease-out infinite alternate; }
-        .btn, .sidebar a { transition:transform .2s, box-shadow .2s; }
-        .btn:hover, .sidebar a:hover { transform:translateY(-2px); box-shadow:0 4px 8px rgba(0,0,0,0.1); }
-        .modal.fade .modal-dialog { transition:transform .3s ease-out; transform:translateY(-30px); }
-        .modal.show .modal-dialog { transform:translateY(0); }
-        @media(max-width:768px){ .sidebar { width:0; } .content { margin-left:0; } .navbar-toggler { display:block; } .sidebar.open{ width:250px; } .content.open{ margin-left:250px; } }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cronograma de Citas</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+  <style>
+    body { margin:0; padding:0; display:flex; }
+    .sidebar { width:250px; background:#121f16; height:100vh; position:fixed; transition: width .3s ease, opacity .3s ease; opacity:1; }
+    .sidebar a { color:#fff; padding:15px; display:block; text-decoration:none; transition: transform .2s, box-shadow .2s; }
+    .sidebar a:hover { transform:translateY(-2px); box-shadow:0 4px 8px rgba(0,0,0,0.1); background:#817373; }
+    .sidebar .navbar-brand { font-size:24px; font-weight:bold; padding-left:20px; }
+    .content { margin-left:250px; padding:20px; transition: margin-left .3s ease; width:100%; }
+    .navbar-toggler { display:none; }
+    @keyframes fadeIn { from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
+    .fade-in { animation:fadeIn .5s ease forwards; }
+    @keyframes pulse { 0%,100%{ box-shadow:0 0 0 0 rgba(220,53,69,0.7);} 50%{ box-shadow:0 0 10px 5px rgba(220,53,69,0.3);} }
+    .highlight { position:relative; animation:pulse 2s infinite ease-in-out; }
+    .highlight::after { content:''; position:absolute; left:0; bottom:2px; height:3px; background:red; animation:underlineGrow 1s ease-out infinite alternate; width:100%; }
+    .btn, .sidebar a { transition:transform .2s, box-shadow .2s; }
+    .btn:hover, .sidebar a:hover { transform:translateY(-2px); box-shadow:0 4px 8px rgba(0,0,0,0.1); }
+    @media(max-width:768px){ .sidebar { width:0; } .content { margin-left:0; } .navbar-toggler { display:block; } .sidebar.open{ width:250px; } .content.open{ margin-left:250px; } }
+  </style>
 </head>
 <body>
-    <!-- Sonido de emergencia -->
-    <audio id="alertSound" src="livechat-129007.mp3" preload="auto"></audio>
+  <audio id="alertSound" src="livechat-129007.mp3" preload="auto"></audio>
 
-    <!-- Sidebar -->
-    <div class="sidebar" id="sidebar">
-        <a href="#" class="navbar-brand"> 𝐌𝐆 𝐀𝐔𝐓𝐎𝐌𝐎𝐓𝐑𝐈𝐙 </a>
-        <a href="gestion.html" onclick="showBalancesSection()">𝕭𝖆𝖑𝖆𝖓𝖈𝖊</a>
-        <a href="gestion.html" onclick="showIncomeExpenseSection()">𝕮𝖔𝖓𝖙𝖗𝖔𝖑 𝖑𝖊 𝕸𝖊𝖗𝖈𝖆𝖉𝖊𝖗𝖎𝖆</a>
-    </div>
+  <div class="sidebar" id="sidebar">
+    <a href="#" class="navbar-brand"> 𝐌𝐆 𝐀𝐔𝐓𝐎𝐌𝐎𝐓𝐑𝐈𝐙 </a>
+    <a href="gestion.html">𝕭𝖆𝖑𝖆𝖓𝖈𝖊</a>
+    <a href="gestion.html">𝕮𝖔𝖓𝖙𝖗𝖔𝖑 𝖑𝖊 𝕸𝖊𝖗𝖈𝖆𝖉𝖊𝖗𝖎𝖆</a>
+  </div>
 
-    <!-- Main content -->
-    <div class="content">
-        <button class="navbar-toggler btn btn-light" onclick="toggleSidebar()">☰</button>
-        <div id="appointmentsSection">
-            <div class="container mt-5" id="pdfContent">
-                <h1 class="text-center">𝐂𝐑𝐎𝐍𝐎𝐆𝐑𝐀𝐌𝐀 𝐃𝐄 𝐂𝐈𝐓𝐀𝐒</h1>
-                <div class="mb-4">
-                    <input type="text" id="searchInput" class="form-control" placeholder="Buscar por nombre, apellido o descripción..." onkeyup="searchAppointments()">
-                </div>
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Crear Nueva Cita</h5>
-                        <form id="appointmentForm">
-                            <div class="form-group">
-                                <label for="firstName">Nombre</label>
-                                <input type="text" id="firstName" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="lastName">Apellidos</label>
-                                <input type="text" id="lastName" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="appointmentDescription">Descripción</label>
-                                <textarea id="appointmentDescription" class="form-control" rows="2"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label for="appointmentDate">Fecha y Hora</label>
-                                <input type="datetime-local" id="appointmentDate" class="form-control" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Guardar Cita</button>
-                        </form>
-                    </div>
-                </div>
-                <div class="mt-4">
-                    <h5>Citas Programadas</h5>
-                    <table class="table table-striped">
-                        <thead>
-                            <tr><th>Nombre</th><th>Apellidos</th><th>Descripción</th><th>Fecha y Hora</th><th>Acción</th></tr>
-                        </thead>
-                        <tbody id="appointmentsList"></tbody>
-                    </table>
-                </div>
+  <div class="content">
+    <button class="navbar-toggler btn btn-light" onclick="toggleSidebar()">☰</button>
+    <div class="container mt-5" id="pdfContent">
+      <h1 class="text-center">𝐂𝐑𝐎𝐍𝐎𝐆𝐑𝐀𝐌𝐀 𝐃𝐄 𝐂𝐈𝐓𝐀𝐒</h1>
+      <div class="mb-4">
+        <input type="text" id="searchInput" class="form-control" placeholder="Buscar por nombre, apellido o descripción..." onkeyup="searchAppointments()">
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Crear Nueva Cita</h5>
+          <form id="appointmentForm">
+            <div class="form-group">
+              <label for="firstName">Nombre</label>
+              <input type="text" id="firstName" class="form-control" required>
             </div>
-        </div>
-    </div>
-
-    <!-- Modal detalles -->
-    <div class="modal fade" id="appointmentDetailsModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Detalles de la Cita</h5>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-                <div class="modal-body" id="modalPdfContent">
-                    <p><strong>Nombre:</strong> <span id="appointmentFirstName"></span> <span id="appointmentLastName"></span></p>
-                    <p><strong>Descripción:</strong> <span id="appointmentDescriptionText"></span></p>
-                    <p><strong>Fecha y Hora:</strong> <span id="appointmentDateTime"></span></p>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-primary" onclick="saveAppointmentPdf()">Guardar PDF</button>
-                    <button class="btn btn-success" onclick="sendPdfWhatsapp()">Enviar por WhatsApp</button>
-                    <button class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                </div>
+            <div class="form-group">
+              <label for="lastName">Apellidos</label>
+              <input type="text" id="lastName" class="form-control" required>
             </div>
+            <div class="form-group">
+              <label for="appointmentDescription">Descripción</label>
+              <textarea id="appointmentDescription" class="form-control" rows="2"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="appointmentDate">Fecha y Hora</label>
+              <input type="datetime-local" id="appointmentDate" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar Cita</button>
+          </form>
         </div>
+      </div>
+      <div class="mt-4">
+        <h5>Citas Programadas</h5>
+        <table class="table table-striped">
+          <thead>
+            <tr><th>Nombre</th><th>Apellidos</th><th>Descripción</th><th>Fecha y Hora</th><th>Acción</th></tr>
+          </thead>
+          <tbody id="appointmentsList"></tbody>
+        </table>
+      </div>
     </div>
+  </div>
 
-    <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script>
-        let appointments = JSON.parse(localStorage.getItem('appointments')) || [];
-        let currentIndex = null;
-        const alertSound = document.getElementById('alertSound');
-        let alarmInterval = null;
+  <div class="modal fade" id="appointmentDetailsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Detalles de la Cita</h5>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body" id="modalPdfContent">
+          <p><strong>Nombre:</strong> <span id="appointmentFirstName"></span> <span id="appointmentLastName"></span></p>
+          <p><strong>Descripción:</strong> <span id="appointmentDescriptionText"></span></p>
+          <p><strong>Fecha y Hora:</strong> <span id="appointmentDateTime"></span></p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" onclick="saveAppointmentPdf()">Guardar PDF</button>
+          <button class="btn btn-success" onclick="sendPdfWhatsapp()">Enviar por WhatsApp</button>
+          <button class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-        // Desbloquear reproducción de audio tras primer clic del usuario
-        document.body.addEventListener('click', function unlockAudio() {
-            alertSound.play().then(() => alertSound.pause()).catch(() => {});
-            document.body.removeEventListener('click', unlockAudio);
-        });
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script>
+    let appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+    let currentIndex = null;
+    const alertSound = document.getElementById('alertSound');
+    let alarmInterval = null;
 
-        function addAppointment(fn, ln, desc, dt) {
-            appointments.push({ firstName: fn, lastName: ln, description: desc, appointmentDate: dt });
-            localStorage.setItem('appointments', JSON.stringify(appointments));
-            renderAppointments();
-        }
+    document.body.addEventListener('click', function unlockAudio() {
+      alertSound.play().then(() => alertSound.pause()).catch(() => {});
+      document.body.removeEventListener('click', unlockAudio);
+    });
 
-        function renderAppointments(list = appointments) {
-            const tbody = document.getElementById('appointmentsList');
-            tbody.innerHTML = '';
-            const now = new Date();
-            let upcomingExists = false;
+    function addAppointment(fn, ln, desc, dt) {
+      appointments.push({ firstName: fn, lastName: ln, description: desc, appointmentDate: dt });
+      localStorage.setItem('appointments', JSON.stringify(appointments));
+      renderAppointments();
+    }
 
-            list.forEach((a, i) => {
-                const date = new Date(a.appointmentDate);
-                const isUpcoming = date.getTime() <= now.getTime() + 5 * 60 * 1000 && date.getTime() > now.getTime();
-                if (isUpcoming) upcomingExists = true;
+    function renderAppointments(list = appointments) {
+      const tbody = document.getElementById('appointmentsList');
+      tbody.innerHTML = '';
+      const now = new Date();
+      let upcomingExists = false;
 
-                const tr = document.createElement('tr');
-                if (isUpcoming) tr.classList.add('highlight');
-                tr.classList.add('fade-in');
-                tr.innerHTML = 
-                    <td>${a.firstName}</td>
-                    <td>${a.lastName}</td>
-                    <td>${a.description || '-'}</td>
-                    <td>${date.toLocaleString()}</td>
-                    <td>
-                      <button class="btn btn-info" onclick="viewAppointmentDetails(${i})">Ver</button>
-                      <button class="btn btn-danger" onclick="deleteAppointment(${i})">Eliminar</button>
-                    </td>
-                ;
-                tbody.appendChild(tr);
-            });
+      list.forEach((a, i) => {
+        const date = new Date(a.appointmentDate);
+        const isUpcoming = date.getTime() <= now.getTime() + 5 * 60 * 1000 && date.getTime() > now.getTime();
+        if (isUpcoming) upcomingExists = true;
 
-            // Manejo de alarma repetitiva
-            if (upcomingExists && !alarmInterval) {
-                alertSound.play().catch(() => {});
-                alarmInterval = setInterval(() => alertSound.play().catch(() => {}), 3000);
-            } else if (!upcomingExists && alarmInterval) {
-                clearInterval(alarmInterval);
-                alarmInterval = null;
-            }
-        }
+        const tr = document.createElement('tr');
+        if (isUpcoming) tr.classList.add('highlight');
+        tr.classList.add('fade-in');
+        tr.innerHTML = `
+          <td>${a.firstName}</td>
+          <td>${a.lastName}</td>
+          <td>${a.description || '-'}</td>
+          <td>${date.toLocaleString()}</td>
+          <td>
+            <button class="btn btn-info" onclick="viewAppointmentDetails(${i})">Ver</button>
+            <button class="btn btn-danger" onclick="deleteAppointment(${i})">Eliminar</button>
+          </td>`;
+        tbody.appendChild(tr);
+      });
 
-        function viewAppointmentDetails(i) {
-            currentIndex = i;
-            const a = appointments[i];
-            document.getElementById('appointmentFirstName').textContent = a.firstName;
-            document.getElementById('appointmentLastName').textContent = a.lastName;
-            document.getElementById('appointmentDescriptionText').textContent = a.description || '-';
-            document.getElementById('appointmentDateTime').textContent = new Date(a.appointmentDate).toLocaleString();
-            $('#appointmentDetailsModal').modal('show');
-        }
+      if (upcomingExists && !alarmInterval) {
+        alertSound.play().catch(() => {});
+        alarmInterval = setInterval(() => alertSound.play().catch(() => {}), 3000);
+      } else if (!upcomingExists && alarmInterval) {
+        clearInterval(alarmInterval);
+        alarmInterval = null;
+      }
+    }
 
-        function deleteAppointment(i) { appointments.splice(i, 1); localStorage.setItem('appointments', JSON.stringify(appointments)); renderAppointments(); }
-        function saveAppointmentPdf() { html2pdf().from(document.getElementById('modalPdfContent')).set({ filename: 'cita.pdf' }).save(); }
-        function sendPdfWhatsapp() {
-            saveAppointmentPdf();
-            const fn = document.getElementById('appointmentFirstName').textContent;
-            const ln = document.getElementById('appointmentLastName').textContent;
-            const desc = document.getElementById('appointmentDescriptionText').textContent;
-            const dt = document.getElementById('appointmentDateTime').textContent;
-            const msg = Cita: ${fn} ${ln} – ${dt}\nDescripción: ${desc}\nRevisa el PDF adjunto.;
-            window.open(https://wa.me/573001234567?text=${encodeURIComponent(msg)}, '_blank');
-        }
+    function viewAppointmentDetails(i) {
+      currentIndex = i;
+      const a = appointments[i];
+      document.getElementById('appointmentFirstName').textContent = a.firstName;
+      document.getElementById('appointmentLastName').textContent = a.lastName;
+      document.getElementById('appointmentDescriptionText').textContent = a.description || '-';
+      document.getElementById('appointmentDateTime').textContent = new Date(a.appointmentDate).toLocaleString();
+      $('#appointmentDetailsModal').modal('show');
+    }
 
-        document.getElementById('appointmentForm').addEventListener('submit', e => {
-            e.preventDefault();
-            addAppointment(
-                document.getElementById('firstName').value,
-                document.getElementById('lastName').value,
-                document.getElementById('appointmentDescription').value,
-                document.getElementById('appointmentDate').value
-            );
-            e.target.reset();
-        });
+    function deleteAppointment(i) {
+      appointments.splice(i, 1);
+      localStorage.setItem('appointments', JSON.stringify(appointments));
+      renderAppointments();
+    }
 
-        function searchAppointments() {
-            const q = document.getElementById('searchInput').value.toLowerCase();
-            renderAppointments(appointments.filter(a => a.firstName.toLowerCase().includes(q) || a.lastName.toLowerCase().includes(q) || (a.description || '').toLowerCase().includes(q)));
-        }
-        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.querySelector('.content').classList.toggle('open'); }
-        renderAppointments();
-    </script>
+    function saveAppointmentPdf() {
+      html2pdf().from(document.getElementById('modalPdfContent')).set({ filename: 'cita.pdf' }).save();
+    }
+
+    function sendPdfWhatsapp() {
+      saveAppointmentPdf();
+      const fn = document.getElementById('appointmentFirstName').textContent;
+      const ln = document.getElementById('appointmentLastName').textContent;
+      const desc = document.getElementById('appointmentDescriptionText').textContent;
+      const dt = document.getElementById('appointmentDateTime').textContent;
+      const msg = `Cita: ${fn} ${ln} – ${dt}\nDescripción: ${desc}\nRevisa el PDF adjunto.`;
+      window.open(`https://wa.me/573001234567?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    document.getElementById('appointmentForm').addEventListener('submit', e => {
+      e.preventDefault();
+      addAppointment(
+        document.getElementById('firstName').value,
+        document.getElementById('lastName').value,
+        document.getElementById('appointmentDescription').value,
+        document.getElementById('appointmentDate').value
+      );
+      e.target.reset();
+    });
+
+    function searchAppointments() {
+      const q = document.getElementById('searchInput').value.toLowerCase();
+      renderAppointments(appointments.filter(a => a.firstName.toLowerCase().includes(q) || a.lastName.toLowerCase().includes(q) || (a.description || '').toLowerCase().includes(q)));
+    }
+
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.querySelector('.content').classList.toggle('open');
+    }
+
+    renderAppointments();
+  </script>
 </body>
 </html>
+
